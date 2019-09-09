@@ -1,0 +1,32 @@
+import math
+
+class Opamp():
+    def __init__(self,f,r,rf,vin):
+        self.f=f
+        self.r=r
+        self.rf=vin
+        self.vin=vin
+        self.b=self.r/(self.rf+self.r)
+        self.k=self.rf/(self.r+self.r)
+    def parameters(self,gbw,slew,aol_dc):
+        self.aol_dc=aol_dc
+        self.gbw=gbw
+        self.aol=gbw/self.f
+        self.app_gain=1+(self.rf/self.r)
+        self.actual_gain_in=self.aol*self.k/(1+(self.aol*self.b))
+        self.actual_gain_nonin=self.aol/(1+(self.aol*self.b))
+        self.vout=self.vin*self.actual_gain_in
+        self.slew=slew
+        #self.slew_calculated=2*math.pi*self.f*self.vout*10e-6
+        self.cutoff_frequency=self.gbw/self.aol_dc
+ 
+ua741=Opamp(f=50e3,r=1,rf=10,vin=0.2)
+
+ua741.parameters(1e6,0.5,2e5)
+print("Aol of ua741 is {}".format(ua741.aol))
+print("cuttoff frequency is {}".format(ua741.cutoff_frequency))
+print("actual gain inverting is {}".format(ua741.actual_gain_in))
+print("actual gain noninverting is {}".format(ua741.actual_gain_nonin))
+print("vout {} ".format(ua741.vout))
+#output=ua741.aol/(1+a*(r/(r+rf)))
+        
